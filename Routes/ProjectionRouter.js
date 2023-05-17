@@ -5,5 +5,5 @@ const router = express.Router();
 router.get("/getProjection", getProjection);
 router.get("/getProjectionById", getProjectionById);
 router.get("/getProjectionByIdFilmAndIdSalle/:filmId/:cinemaId",getProjectionByIdFilmAndIdSalle)
-router.post("/createProjection/:filmId/:cinemaId",createProjection)
+router.post("/",createProjection)
 export default router;

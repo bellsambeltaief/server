@@ -1,27 +1,29 @@
 import asyncHandler from "express-async-handler"
 import Projection from "../Models/ProjectionModel.js"
 import mongoose from "mongoose";
-const getProjection = asyncHandler(async (req,res) => {
-    try{
-      const projs = await Projection.find();
-      res.status(200).json(projs);
-    }catch(error){
-      res.status(400).json({
-        message: error.message
-      });
-     }
-  
-});
-
-const getProjectionById = asyncHandler(async (req,res) => {
-  try{
-    const proj = await Projection.find({ film: req.query.id });
-    res.status(200).json(proj);
-  }catch(error){
+import Film from "../Models/filmModel.js"
+import Cinema from "../Models/cinemaModel.js"
+const getProjection = asyncHandler(async (req, res) => {
+  try {
+    const projs = await Projection.find();
+    res.status(200).json(projs);
+  } catch (error) {
     res.status(400).json({
       message: error.message
     });
-   }
+  }
+
+});
+
+const getProjectionById = asyncHandler(async (req, res) => {
+  try {
+    const proj = await Projection.find({ film: req.query.id });
+    res.status(200).json(proj);
+  } catch (error) {
+    res.status(400).json({
+      message: error.message
+    });
+  }
 
 });
 
@@ -33,7 +35,7 @@ const getProjectionByIdFilmAndIdSalle = asyncHandler(async (req, res) => {
       {
         $lookup: {
           from: 'films',
-          localField: 'film',
+          localField: 'filmId',
           foreignField: '_id',
           as: 'film',
         },
@@ -41,7 +43,7 @@ const getProjectionByIdFilmAndIdSalle = asyncHandler(async (req, res) => {
       {
         $lookup: {
           from: 'cinemas',
-          localField: 'cinema',
+          localField: 'cinemaId',
           foreignField: '_id',
           as: 'cinema',
         },
@@ -57,7 +59,6 @@ const getProjectionByIdFilmAndIdSalle = asyncHandler(async (req, res) => {
           film: { $arrayElemAt: ['$film', 0] },
           cinema: { $arrayElemAt: ['$cinema', 0] },
         },
-        
       },
     ]);
 
@@ -67,10 +68,12 @@ const getProjectionByIdFilmAndIdSalle = asyncHandler(async (req, res) => {
 
     res.json(projection[0]);
   } catch (error) {
-    res.status(500).json({ error: 'Server error'+ filmId + ' ' + cinemaId });
+    res.status(500).json({ error: 'Server error' });
     console.error(error);
   }
 });
+
+
 
 async function createProjection(req, res) {
   console.log("creating projection")
@@ -80,7 +83,7 @@ async function createProjection(req, res) {
     // Fetch the film and cinema documents
     const film = await Film.findById(filmId);
     const cinema = await Cinema.findById(cinemaId);
-console.log(film);
+    console.log(film);
     // Check if film and cinema exist
     if (!film || !cinema) {
       return res.status(404).json({ error: 'Film or cinema not found' });
@@ -89,15 +92,17 @@ console.log(film);
     const projection = new Projection({
       dateProjection,
       prix,
-      cinema: cinema._id,
-      film: film._id
+      cinemaId: cinema._id,
+      filmId: film._id
     });
 
     const savedProjection = await projection.save();
     res.status(201).json(savedProjection);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to create projection'   });
+    res.status(500).json({ error: 'Failed to create projection' });
+    console.error(error)
+
   }
 }
 
-export { getProjection, getProjectionById,getProjectionByIdFilmAndIdSalle,createProjection };
+export { getProjection, getProjectionById, getProjectionByIdFilmAndIdSalle, createProjection };
