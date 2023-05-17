@@ -1,6 +1,6 @@
 import asyncHandler from "express-async-handler"
 import Projection from "../Models/ProjectionModel.js"
-
+import mongoose from "mongoose";
 const getProjection = asyncHandler(async (req,res) => {
     try{
       const projs = await Projection.find();
@@ -59,7 +59,6 @@ const getProjectionByIdFilmAndIdSalle = asyncHandler(async (req, res) => {
         },
         
       },
-      console.log('this is the film', film)
     ]);
 
     if (projection.length === 0) {
@@ -69,34 +68,36 @@ const getProjectionByIdFilmAndIdSalle = asyncHandler(async (req, res) => {
     res.json(projection[0]);
   } catch (error) {
     res.status(500).json({ error: 'Server error'+ filmId + ' ' + cinemaId });
+    console.error(error);
   }
 });
 
-const createProjection = async (req, res) => {
-  const { filmId, cinemaId } = req.body;
-
+async function createProjection(req, res) {
+  console.log("creating projection")
   try {
-    // Check if film and cinema exist
+    const { dateProjection, prix, cinemaId, filmId } = req.body;
+
+    // Fetch the film and cinema documents
     const film = await Film.findById(filmId);
     const cinema = await Cinema.findById(cinemaId);
-
+console.log(film);
+    // Check if film and cinema exist
     if (!film || !cinema) {
-      return res.status(400).json({ error: 'Film or cinema not found' });
+      return res.status(404).json({ error: 'Film or cinema not found' });
     }
 
-    // Create a new projection entity
     const projection = new Projection({
-      film: filmId,
-      cinema: cinemaId,
-      // Other projection properties...
+      dateProjection,
+      prix,
+      cinema: cinema._id,
+      film: film._id
     });
 
-    // Save the projection to the database
-    await projection.save();
-
-    res.status(201).json(projection);
+    const savedProjection = await projection.save();
+    res.status(201).json(savedProjection);
   } catch (error) {
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: 'Failed to create projection'   });
   }
-};
+}
+
 export { getProjection, getProjectionById,getProjectionByIdFilmAndIdSalle,createProjection };
