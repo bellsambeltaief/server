@@ -1,8 +1,9 @@
 import express from 'express'
-import { getProjection, getProjectionById } from '../Controllers/ProjectionController.js';
+import { createProjection, getProjection, getProjectionById, getProjectionByIdFilmAndIdSalle } from '../Controllers/ProjectionController.js';
 
 const router = express.Router();
 router.get("/getProjection", getProjection);
 router.get("/getProjectionById", getProjectionById);
-
+router.get("/getProjectionByIdFilmAndIdSalle/:filmId/:cinemaId",getProjectionByIdFilmAndIdSalle)
+router.post("/createProjection/:filmId/:cinemaId",createProjection)
 export default router;
