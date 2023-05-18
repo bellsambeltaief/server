@@ -5,7 +5,7 @@ const UserSchema = mongoose.Schema({
 
     userName:{
         type: String,
-        required:[true,'Please add your name ']
+        required:[true,'Please add your username '],
     }, 
     email:{
         type: String,
@@ -20,27 +20,18 @@ const UserSchema = mongoose.Schema({
     },
     image:{
         type: String,
-
     },
    
     isAdmin: {
         type: Boolean,
         default: false,
     },
-
-
 },
 {
     timestamps: true,
 });
 
 export default mongoose.model('User',UserSchema);
-
-
-
-
-
-
 
 
 

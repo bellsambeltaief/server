@@ -7,7 +7,9 @@ import { generateToken } from '../Midllewares/Auth.js'
 //register user
 //post/api/user
 const registerUser = asyncHandler(async (req,res) =>{
-    const {userName, email, password,image} = req.body
+    const {email, password, userName, image} = req.body
+    console.log(req.body)
+
     try{
       const userExists = await User.findOne({email})
       //check if user exists
@@ -21,33 +23,31 @@ const registerUser = asyncHandler(async (req,res) =>{
     const hashedPassword = await bcrypt.hash(password, salt);
       // create user
       const user = await User.create({
-        userName,
         email,
         password: hashedPassword,
-        image,
+        userName,
+        image
       });
 
      // if user created successfully send user data and token to client
-     if(user){
+     if(user) {
       res.status(201).json({
         _id: user._id,
-        userName: user.userName,
         email: user.email,
-        image: user.image,
         isAdmin: user.isAdmin,
-        token: generateToken(user._id),
+        token: generateToken(user._id)
       });
     
      }
 
     else{
       res.status(400);
-      throw new Error(" Invalid user data");
+      throw new Error("Invalid user data");
     }
 
     }catch(error){
      res.status(400).json({
-      message: error.message
+        message: error.message
      });
 
     }
@@ -55,7 +55,7 @@ const registerUser = asyncHandler(async (req,res) =>{
 
 //login user
 //post/api/user
-const loginUser = asyncHandler(async (req,res) =>{
+const loginUser = asyncHandler(async (req,res) => {
   const { email, password } = req.body;
   try{
     //find user in db
@@ -184,16 +184,6 @@ const getUsers = asyncHandler(async (req, res) => {
     res.status(400).json({message: error.message});
   }
 });
-const getUsersCount = asyncHandler(async (req, res) => {
-  try {
-    // Count all users in the database
-    const count = await User.countDocuments();
-    res.json({ count });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-});
-
 
 //delete user
 //delete/api/user/:id
@@ -221,28 +211,28 @@ else{
     res.status(400).json({message: error.message});
   }
 })
-const updateUser = asyncHandler(async (req, res) => {
-  //const { userName, email, image,isAdmin } = req.body;
 
-  const user = await User.findById(req.params.id);
-  
-  if (!user) {
-     res.status(400)
-    throw new Error("user not found")
-    }
-   const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-   })
-   res.status(200).json(updatedUser)
-   })
-export {
-  registerUser,
-  loginUser,
-  updateUserProfile,
+
+// logout user
+// POST /api/user/logout
+const logoutUser = asyncHandler(async (req, res) => {
+  try {
+    // remove user token from the database or client-side storage
+// remove user token from client-side storage
+    
+    // send response indicating successful logout
+    res.json({ message: 'User logged out successfully' });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+export {registerUser,
+   loginUser,
+   updateUserProfile,
   deleteUserProfile,
   changeUserPassword,
   getUsers,
   deleteUser,
-  updateUser,
-  getUsersCount
+  logoutUser,
 };
