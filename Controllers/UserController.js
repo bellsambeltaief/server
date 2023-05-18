@@ -235,9 +235,10 @@ const updateUser = asyncHandler(async (req, res) => {
    })
    res.status(200).json(updatedUser)
    })
-export {registerUser,
-   loginUser,
-   updateUserProfile,
+export {
+  registerUser,
+  loginUser,
+  updateUserProfile,
   deleteUserProfile,
   changeUserPassword,
   getUsers,
