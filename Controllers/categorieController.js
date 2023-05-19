@@ -1,5 +1,5 @@
-import asyncHandler from "express-async-handler"
-import Categorie from '../Models/categorieModel.js'
+const asyncHandler = require("express-async-handler")
+const Categorie= require("../Models/categorieModel")
 
 const getCategorie =async (req, res) => {
  try {
@@ -53,7 +53,7 @@ const addCategorie = asyncHandler(async (req, res) => {
       await categorie.remove()
       res.status(200).json({ id: req.params.id })
     })
-export{
+module.exports = {
     getCategorie,
     getCategorieById,
     addCategorie,

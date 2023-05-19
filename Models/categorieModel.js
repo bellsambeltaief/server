@@ -1,17 +1,21 @@
-import mongoose from 'mongoose';
+const mongoose = require("mongoose")
 
 const categorieSchema = mongoose.Schema(
   {
     
     name: {
-        type: String,
-        required: [true, "Please add an name"],
-      }, 
-    
+      type: String,
+      required: [true, "Please add an name"],
+    }, 
+    idFilm: {
+      type: String,
+      //required: [true, "Please add an name"],
+    }, 
+  
 },
     {
       timestamps: true,
     },
 
   )
-  export default mongoose.model("Categorie", categorieSchema)
+  module.exports = mongoose.model("categorie", categorieSchema)

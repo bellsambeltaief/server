@@ -1,12 +1,12 @@
-import express from 'express'
+const express = require("express")
 const router = express.Router()
-import {
+const {
   getCategorie,
   getCategorieById,
   addCategorie,
   deleteCategorie
-} from '../Controllers/categorieController.js'
-//const country = require("../Models/categorieModel")
+} = require("../Controllers/categorieController.js");
+const country = require("../Models/categorieModel")
 
 // get my tasks
 router.get("/", getCategorie)
@@ -16,4 +16,4 @@ router.post("/",addCategorie)
 //delete Film
 router.delete("/:id", deleteCategorie)
 
-export default router;
+module.exports = router
