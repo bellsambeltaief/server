@@ -1,25 +1,25 @@
-import express from 'express'
-const router = express.Router()
-import 
- {
+const express = require("express");
+const router = express.Router();
+const {
   getFilms,
   addFilm,
   updateFilm,
   deleteFilm,
   getFilmById,
-  getFilmCount
-} from '../Controllers/filmController.js';
+  getFilmsByIdCategorie,
+} = require("../Controllers/filmController");
 
-// get my Film
-router.get("/", getFilms)
+// get all Films
+router.get("/", getFilms);
+// get Film by ID
 router.get("/:id", getFilmById);
+// get Films by Category ID
+router.get("/categorie/:idCategorie", getFilmsByIdCategorie);
 // add Film
-router.post("/", addFilm)
-//update Film
-router.put("/:id", updateFilm)
-//delete Film
-router.delete("/:id", deleteFilm)
-router.get("/count", getFilmCount);
+router.post("/", addFilm);
+// update Film
+router.put("/:id", updateFilm);
+// delete Film
+router.delete("/:id", deleteFilm);
 
-
-export default router;
+module.exports = router;

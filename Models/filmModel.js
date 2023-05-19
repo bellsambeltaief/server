@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require("mongoose")
 
 const filmSchema = mongoose.Schema(
   {
@@ -36,11 +36,11 @@ const filmSchema = mongoose.Schema(
     }, 
     video: {
       type: String,
-  
+      //equired: [true, "Please add a video"],
     },
     imagesStars:{
       type: [String],
-   
+      //required: [true, "Please add a video"],
     },
     listProjection: {
       type: []
@@ -52,4 +52,4 @@ const filmSchema = mongoose.Schema(
     timestamps: true,
   },
 )
-export default mongoose.model("Film", filmSchema);
+module.exports = mongoose.model("films", filmSchema)

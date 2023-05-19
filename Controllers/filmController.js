@@ -1,5 +1,6 @@
-import asyncHandler from "express-async-handler"
-import  Film  from "../Models/filmModel.js";
+const asyncHandler = require("express-async-handler")
+const Film = require("../Models/filmModel")
+
 
 const getFilms =async (req, res) => {
  try {
@@ -9,19 +10,6 @@ const getFilms =async (req, res) => {
   return res.status(500).json(error)
  }
 }
-const getFilmCount = asyncHandler(async (req, res) => {
-  try {
-    // Count all films in the database
-    const count = await Film.countDocuments({});
-    console.log(`Number of films in database: ${count}`);
-    res.json({ count: parseInt(count) }); // Use parseInt to convert count to a number
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-});
-
-
-
 
 const getFilmById = async (req, res) => {
   try {
@@ -34,6 +22,20 @@ const getFilmById = async (req, res) => {
     return res.status(500).json(error);
   }
 };
+const getFilmsByIdCategorie = async (req, res) => {
+  try {
+    const idCategorie = req.params.idCategorie;
+
+    const films = await Film.find({ categorie: idCategorie }).populate('categorie');
+
+    res.json(films);
+  } catch (error) {
+    console.error('Erreur lors de la récupération des films', error);
+    res.status(500).json({ error: 'Erreur lors de la récupération des films' });
+  }
+};
+
+
 
 
 const addFilm = asyncHandler(async (req, res) => {
@@ -98,11 +100,18 @@ const deleteFilm = asyncHandler(async (req, res) => {
   await film.remove()
   res.status(200).json({ id: req.params.id })
 })
-export  {
+
+
+
+
+
+
+
+module.exports = {
   getFilms,
   addFilm,
   updateFilm,
   deleteFilm,
   getFilmById,
-  getFilmCount
+  getFilmsByIdCategorie,
 }
