@@ -56,6 +56,8 @@ const getProjectionByIdFilmAndIdSalle = asyncHandler(async (req, res) => {
       },
       {
         $project: {
+          dateProjection: 1,
+          prix: 1,
           film: { $arrayElemAt: ['$film', 0] },
           cinema: { $arrayElemAt: ['$cinema', 0] },
         },
@@ -72,6 +74,7 @@ const getProjectionByIdFilmAndIdSalle = asyncHandler(async (req, res) => {
     console.error(error);
   }
 });
+
 
 
 
